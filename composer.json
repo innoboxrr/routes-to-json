@@ -1,0 +1,26 @@
+{
+    "name": "innoboxrr/routes-to-json",
+    "description": "A partir de las rutas del sistema, laravel crea un archivo json en la ubicación especificada en el archivo de configuración para que sean resueltas en el frontend por el paquete route-resolver",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Innoboxrr\\RoutesToJson\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Homero Raul",
+            "email": "h.raulvc@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Innoboxrr\\RoutesToJson\\Providers\\RoutesToJsonServiceProvider"
+            ]
+        }
+    }
+}
