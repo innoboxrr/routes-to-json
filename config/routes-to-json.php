@@ -2,6 +2,6 @@
 
 return [
 
-	'path' => resources_path('json/routes.json')
+	'path' => resource_path('json/routes.json')
 
 ];
