@@ -31,5 +31,11 @@ class RoutesToJsonServiceProvider extends ServiceProvider
             RouteToJsonCommand::class,
         ]);
 
+        if ($this->app->runningInConsole()) {
+
+            $this->publishes([__DIR__.'/../../config/routes-to-json.php' => config_path('routes-to-json.php')], 'config');
+
+        }
+
     }
 }
