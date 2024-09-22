@@ -45,21 +45,27 @@ class RouteToJsonCommand extends Command
      */
     public function handle()
     {
-
         $routes = [];
 
         foreach ($this->router->getRoutes() as $route) {
-            
             $routes[$route->getName()] = $route->uri();
-
         }
 
-        $path = config('routes-to-json.path');
+        // Obtener el path desde la configuración o usar un valor por defecto
+        $path = config('routes-to-json.path', resource_path('json/routes.json'));
 
+        // Verificar si el directorio existe, si no, crearlo
+        $directory = dirname($path);
+
+        if (!File::isDirectory($directory)) {
+            File::makeDirectory($directory, 0755, true, true); // Crear directorio con permisos 0755
+        }
+
+        // Guardar el archivo JSON
         File::put($path, json_encode($routes, JSON_PRETTY_PRINT));
 
-        return 0;
+        $this->info('Rutas generadas correctamente en formato JSON.');
 
+        return 0;
     }
-    
 }
