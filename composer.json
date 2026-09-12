@@ -15,12 +15,25 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {},
+    "require": {
+        "php": "^8.3",
+        "illuminate/support": "^13.0"
+    },
     "extra": {
         "laravel": {
             "providers": [
                 "Innoboxrr\\RoutesToJson\\Providers\\RoutesToJsonServiceProvider"
             ]
+        }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^11.0",
+        "phpunit/phpunit": "^11.5 || ^12.0",
+        "innoboxrr/larapack-generator": "^7.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Innoboxrr\\RoutesToJson\\Tests\\": "tests/"
         }
     }
 }
