@@ -59,8 +59,7 @@ class RouteToJsonCommand extends Command
             $routes[$name] = $route->uri();
         }
 
-        // Obtener el path desde la configuración o usar un valor por defecto
-        $path = config('routes-to-json.path', resource_path('json/routes.json'));
+        $path = $this->outputPath();
 
         // Verificar si el directorio existe, si no, crearlo
         $directory = dirname($path);
@@ -75,5 +74,28 @@ class RouteToJsonCommand extends Command
         $this->info('Rutas generadas correctamente en formato JSON.');
 
         return 0;
+    }
+
+    /**
+     * La ruta configurada, o la de por defecto si la configuracion la deja
+     * vacia (JSON_ROUTES_FILE= en el .env). Una ruta relativa, como
+     * JSON_ROUTES_FILE=resources/react/assets/json/routes.json, se resuelve
+     * contra la raiz del proyecto y no contra el directorio de trabajo, que
+     * fuera de artisan no tiene por que ser la raiz.
+     */
+    protected function outputPath(): string
+    {
+        $path = config('routes-to-json.path');
+
+        if (! is_string($path) || $path === '') {
+            return resource_path('vue/assets/json/routes.json');
+        }
+
+        $absolute = str_starts_with($path, '/')
+            || str_starts_with($path, '\\')
+            || preg_match('/^[A-Za-z]:[\\\\\/]/', $path) === 1
+            || str_contains($path, '://');
+
+        return $absolute ? $path : base_path($path);
     }
 }

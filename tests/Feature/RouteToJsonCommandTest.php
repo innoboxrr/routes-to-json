@@ -79,6 +79,48 @@ final class RouteToJsonCommandTest extends TestCase
     }
 
     #[Test]
+    public function una_ruta_relativa_se_resuelve_contra_la_raiz_del_proyecto(): void
+    {
+        $relative = 'storage/framework/testing/' . basename($this->directory) . '/routes.json';
+        config()->set('routes-to-json.path', $relative);
+
+        // Desde otro directorio de trabajo: la ruta no puede depender de el.
+        $cwd = getcwd();
+        chdir(sys_get_temp_dir());
+
+        try {
+            $this->artisan('route:json')->assertSuccessful()->run();
+        } finally {
+            chdir($cwd);
+        }
+
+        try {
+            $this->assertArrayHasKey('user.profile', $this->readJson(base_path($relative)));
+        } finally {
+            File::deleteDirectory(base_path(dirname($relative)));
+        }
+    }
+
+    #[Test]
+    public function sin_ruta_configurada_usa_la_de_por_defecto(): void
+    {
+        config()->set('routes-to-json.path', '');
+
+        $vue = resource_path('vue');
+        $existed = is_dir($vue);
+
+        try {
+            $this->artisan('route:json')->assertSuccessful()->run();
+
+            $this->assertArrayHasKey('user.profile', $this->readJson(resource_path('vue/assets/json/routes.json')));
+        } finally {
+            if (! $existed) {
+                File::deleteDirectory($vue);
+            }
+        }
+    }
+
+    #[Test]
     public function crea_el_directorio_si_no_existe(): void
     {
         $nested = $this->directory . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'json';
