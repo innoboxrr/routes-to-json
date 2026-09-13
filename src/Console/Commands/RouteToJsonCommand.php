@@ -2,9 +2,9 @@
 
 namespace Innoboxrr\RoutesToJson\Console\Commands;
 
-use File;
-use Illuminate\Routing\Router;
 use Illuminate\Console\Command;
+use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\File;
 
 class RouteToJsonCommand extends Command
 {
