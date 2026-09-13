@@ -48,7 +48,15 @@ class RouteToJsonCommand extends Command
         $routes = [];
 
         foreach ($this->router->getRoutes() as $route) {
-            $routes[$route->getName()] = $route->uri();
+            $name = $route->getName();
+
+            // Una ruta sin nombre no se puede pedir por nombre desde el
+            // frontend, y todas compartirian la clave "" pisandose entre si.
+            if ($name === null || $name === '') {
+                continue;
+            }
+
+            $routes[$name] = $route->uri();
         }
 
         // Obtener el path desde la configuración o usar un valor por defecto

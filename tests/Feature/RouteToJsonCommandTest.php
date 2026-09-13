@@ -32,6 +32,8 @@ final class RouteToJsonCommandTest extends TestCase
     {
         $router->get('users/{id}/profile', fn () => 'ok')->name('user.profile');
         $router->get('invoices/{invoice}', fn () => 'ok')->name('invoice.show');
+        $router->get('sin-nombre', fn () => 'ok');
+        $router->post('otra-sin-nombre', fn () => 'ok');
     }
 
     #[Test]
@@ -46,6 +48,22 @@ final class RouteToJsonCommandTest extends TestCase
 
         $this->assertSame('users/{id}/profile', $routes['user.profile'] ?? null);
         $this->assertSame('invoices/{invoice}', $routes['invoice.show'] ?? null);
+    }
+
+    #[Test]
+    public function omite_las_rutas_sin_nombre(): void
+    {
+        $path = $this->directory . DIRECTORY_SEPARATOR . 'routes.json';
+        config()->set('routes-to-json.path', $path);
+
+        $this->artisan('route:json')->assertSuccessful();
+
+        $routes = $this->readJson($path);
+
+        $this->assertArrayNotHasKey('', $routes);
+        $this->assertNotContains('sin-nombre', $routes);
+        $this->assertNotContains('otra-sin-nombre', $routes);
+        $this->assertArrayHasKey('user.profile', $routes);
     }
 
     #[Test]
